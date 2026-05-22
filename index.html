@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mera Radio TV Overlay</title>
+    <style>
+        body {
+            background-color: transparent;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: #ffffff;
+        }
+
+        /* Stingray Music Style Lower Third Design Panel */
+        #music-overlay {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            width: 500px;
+        }
+
+        #artwork {
+            width: 85px;
+            height: 85px;
+            border-radius: 6px;
+            object-fit: cover;
+            margin-right: 20px;
+            background-color: #111;
+        }
+
+        #track-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        #title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #artist {
+            font-size: 16px;
+            color: #b3b3b3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="music-overlay">
+        <!-- Direct permanent backup image file link -->
+        <img id="artwork" src="https://radio.co" alt="Art">
+        <div id="track-info">
+            <div id="title">Mera Radio</div>
+            <div id="artist">Connecting...</div>
+        </div>
+    </div>
+
+    <script>
+        const STATION_ID = "s8c6000217";
+        const API_URL = `https://public.radio.co/stations/${STATION_ID}/status`;
+
+        async function fetchLiveStreamData() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) return;
+                
+                const statusData = await response.json();
+                
+                if (statusData && statusData.current_track && statusData.current_track.title) {
+                    let rawText = String(statusData.current_track.title);
+                    
+                    let finalTitle = rawText;
+                    let finalArtist = "Mera Radio Feed";
+
+                    // Crash Fix: Safely split strings using precise index pointers [0] and [1]
+                    if (rawText.includes(" - ")) {
+                        let parts = rawText.split(" - ");
+                        if (parts.length >= 2) {
+                            finalArtist = parts[0].trim(); // Target first text segment safely
+                            finalTitle = parts[1].trim();  // Target second text segment safely
+                        }
+                    }
+
+                    // Directly write values to your live web layout nodes
+                    document.getElementById('title').innerText = finalTitle;
+                    document.getElementById('artist').innerText = finalArtist;
+
+                    // Pull artwork URL nodes safely
+                    let finalArtUrl = "https://radio.co";
+                    if (statusData.current_track.artwork_url_large) {
+                        finalArtUrl = statusData.current_track.artwork_url_large;
+                    } else if (statusData.current_track.artwork_url) {
+                        finalArtUrl = statusData.current_track.artwork_url;
+                    }
+                    document.getElementById('artwork').src = finalArtUrl;
+                }
+            } catch (error) {
+                console.log("Error handling cloud text data fields:", error);
+            }
+        }
+
+        // Initialize connection parameters instantly on launch
+        fetchLiveStreamData();
+        
+        // Refresh values every 6 seconds to track updates quickly
+        setInterval(fetchLiveStreamData, 6000);
+    </script>
+</body>
+</html>
