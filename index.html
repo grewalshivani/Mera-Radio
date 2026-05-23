@@ -15,7 +15,7 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Stingray Music Style Lower Third Design Panel */
+        /* Scaled up container to prevent clipping at crisp resolutions */
         #music-overlay {
             position: absolute;
             bottom: 50px;
@@ -23,16 +23,17 @@
             display: flex;
             align-items: center;
             background: transparent; 
-            padding: 16px 24px;
-            width: 500px;
+            padding: 24px 36px;
+            width: 950px; /* Wider bounding box to prevent large text from cutting off */
         }
 
+        /* Mathematically doubled artwork size from 85px to 170px */
         #artwork {
-            width: 85px;
-            height: 85px;
-            border-radius: 6px;
+            width: 170px;
+            height: 170px;
+            border-radius: 12px;
             object-fit: cover;
-            margin-right: 20px;
+            margin-right: 40px; /* Proportionately wider gap between artwork and text */
             background-color: transparent;
         }
 
@@ -44,18 +45,20 @@
             width: 100%;
         }
 
+        /* Crisp vector text at double the original size (22px -> 44px) */
         #title {
-            font-size: 22px;
+            font-size: 44px; 
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             color: #ffffff;
         }
 
+        /* Crisp vector text at double the original size (16px -> 32px) */
         #artist {
-            font-size: 16px;
+            font-size: 32px;
             color: #e0e0e0;
             white-space: nowrap;
             overflow: hidden;
@@ -82,6 +85,7 @@
             if (rawText.indexOf(" - ") !== -1) {
                 var pieces = rawText.split(" - ");
                 if (pieces.length >= 2) {
+                    // Restored your exact direct array mappings safely
                     separated.artist = pieces[0].trim();
                     separated.title = pieces.slice(1).join(" - ").trim();
                 }
