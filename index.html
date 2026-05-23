@@ -24,16 +24,16 @@
             align-items: center;
             background: transparent; 
             padding: 24px 36px;
-            width: 950px; /* Wider bounding box to prevent large text from cutting off */
+            width: 1050px; /* Expanded slightly to give your text room next to the 210px artwork */
         }
 
-        /* Mathematically doubled artwork size from 85px to 170px */
+        /* Increased creative artwork size from 170px to 210px */
         #artwork {
-            width: 170px;
-            height: 170px;
-            border-radius: 12px;
+            width: 210px;
+            height: 210px;
+            border-radius: 14px; /* Proportionally rounded corners for the 210px size */
             object-fit: cover;
-            margin-right: 40px; /* Proportionately wider gap between artwork and text */
+            margin-right: 45px; /* Clean gap spacing to keep text separate */
             background-color: transparent;
         }
 
@@ -45,7 +45,7 @@
             width: 100%;
         }
 
-        /* Crisp vector text at double the original size (22px -> 44px) */
+        /* Crisp vector text kept exactly the same scale */
         #title {
             font-size: 44px; 
             font-weight: 700;
@@ -56,7 +56,7 @@
             color: #ffffff;
         }
 
-        /* Crisp vector text at double the original size (16px -> 32px) */
+        /* Crisp vector text kept exactly the same scale */
         #artist {
             font-size: 32px;
             color: #e0e0e0;
