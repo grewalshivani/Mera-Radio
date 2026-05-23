@@ -34,7 +34,6 @@
             object-fit: cover;
             margin-right: 20px;
             background-color: transparent;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
         #track-info {
@@ -53,7 +52,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
             color: #ffffff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         #artist {
@@ -62,7 +60,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
@@ -78,7 +75,7 @@
 
     <script>
         const STATION_ID = "s8c6000217";
-        const API_URL = "https://public.radio.co/stations/" + STATION_ID + "/status";
+        const API_URL = "https://radio.co" + STATION_ID + "/status";
 
         async function fetchLiveStreamData() {
             try {
