@@ -69,51 +69,55 @@
         <img id="artwork" src="https://radio.co" alt="Art">
         <div id="track-info">
             <div id="title">Mera Radio</div>
-            <div id="artist">Connecting...</div>
+            <div id="artist">Live Stream</div>
         </div>
     </div>
 
     <script>
-        const STATION_ID = "s8c6000217";
-        const API_URL = "https://radio.co" + STATION_ID + "/status";
+        // Directly maps the elements out without breaking text layout grids
+        function parseTrackInfo(titleString) {
+            var rawText = String(titleString);
+            var separated = { artist: "Mera Radio", title: rawText };
+            
+            if (rawText.indexOf(" - ") !== -1) {
+                var pieces = rawText.split(" - ");
+                if (pieces.length >= 2) {
+                    separated.artist = pieces[0].trim();
+                    separated.title = pieces.slice(1).join(" - ").trim();
+                }
+            }
+            return separated;
+        }
 
         async function fetchLiveStreamData() {
+            var STATION_ID = "s8c6000217";
+            var PRIMARY_API = "https://public.radio.co/stations/" + STATION_ID + "/status";
+            
             try {
-                const response = await fetch(API_URL);
+                var response = await fetch(PRIMARY_API);
                 if (!response.ok) return;
                 
-                const statusData = await response.json();
-                
-                if (statusData && statusData.current_track && statusData.current_track.title) {
-                    let rawText = String(statusData.current_track.title);
+                var data = await response.json();
+                if (data && data.current_track && data.current_track.title) {
+                    var parsed = parseTrackInfo(data.current_track.title);
                     
-                    let finalTitle = rawText;
-                    let finalArtist = "Mera Radio Feed";
+                    document.getElementById('title').innerText = parsed.title;
+                    document.getElementById('artist').innerText = parsed.artist;
 
-                    if (rawText.includes(" - ")) {
-                        let parts = rawText.split(" - ");
-                        if (parts.length >= 2) {
-                            finalArtist = parts.shift().trim();
-                            finalTitle = parts.join(" - ").trim();
-                        }
+                    var imgUrl = "https://radio.co";
+                    if (data.current_track.artwork_url_large) {
+                        imgUrl = data.current_track.artwork_url_large;
+                    } else if (data.current_track.artwork_url) {
+                        imgUrl = data.current_track.artwork_url;
                     }
-
-                    document.getElementById('title').innerText = finalTitle;
-                    document.getElementById('artist').innerText = finalArtist;
-
-                    let finalArtUrl = "https://radio.co";
-                    if (statusData.current_track.artwork_url_large) {
-                        finalArtUrl = statusData.current_track.artwork_url_large;
-                    } else if (statusData.current_track.artwork_url) {
-                        finalArtUrl = statusData.current_track.artwork_url;
-                    }
-                    document.getElementById('artwork').src = finalArtUrl;
+                    document.getElementById('artwork').src = imgUrl;
                 }
             } catch (error) {
-                console.log("Error handling cloud text data fields:", error);
+                console.log("Direct API check encountered field sync variances:", error);
             }
         }
 
+        // Trigger updates seamlessly every 6 seconds
         fetchLiveStreamData();
         setInterval(fetchLiveStreamData, 6000);
     </script>
