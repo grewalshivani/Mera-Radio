@@ -11,6 +11,8 @@
             overflow: hidden;
             font-family: 'Helvetica Neue', Arial, sans-serif;
             color: #ffffff;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* Stingray Music Style Lower Third Design Panel */
@@ -20,10 +22,8 @@
             left: 50px;
             display: flex;
             align-items: center;
-            background: rgba(0, 0, 0, 0.85);
+            background: transparent; 
             padding: 16px 24px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             width: 500px;
         }
 
@@ -33,7 +33,8 @@
             border-radius: 6px;
             object-fit: cover;
             margin-right: 20px;
-            background-color: #111;
+            background-color: transparent;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
         #track-info {
@@ -51,21 +52,23 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         #artist {
             font-size: 16px;
-            color: #b3b3b3;
+            color: #e0e0e0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
 <body>
 
     <div id="music-overlay">
-        <!-- Direct permanent backup image file link -->
         <img id="artwork" src="https://radio.co" alt="Art">
         <div id="track-info">
             <div id="title">Mera Radio</div>
@@ -75,7 +78,7 @@
 
     <script>
         const STATION_ID = "s8c6000217";
-        const API_URL = `https://public.radio.co/stations/${STATION_ID}/status`;
+        const API_URL = "https://public.radio.co/stations/" + STATION_ID + "/status";
 
         async function fetchLiveStreamData() {
             try {
@@ -90,20 +93,17 @@
                     let finalTitle = rawText;
                     let finalArtist = "Mera Radio Feed";
 
-                    // Crash Fix: Safely split strings using precise index pointers [0] and [1]
                     if (rawText.includes(" - ")) {
                         let parts = rawText.split(" - ");
                         if (parts.length >= 2) {
-                            finalArtist = parts[0].trim(); // Target first text segment safely
-                            finalTitle = parts[1].trim();  // Target second text segment safely
+                            finalArtist = parts.shift().trim();
+                            finalTitle = parts.join(" - ").trim();
                         }
                     }
 
-                    // Directly write values to your live web layout nodes
                     document.getElementById('title').innerText = finalTitle;
                     document.getElementById('artist').innerText = finalArtist;
 
-                    // Pull artwork URL nodes safely
                     let finalArtUrl = "https://radio.co";
                     if (statusData.current_track.artwork_url_large) {
                         finalArtUrl = statusData.current_track.artwork_url_large;
@@ -117,10 +117,7 @@
             }
         }
 
-        // Initialize connection parameters instantly on launch
         fetchLiveStreamData();
-        
-        // Refresh values every 6 seconds to track updates quickly
         setInterval(fetchLiveStreamData, 6000);
     </script>
 </body>
